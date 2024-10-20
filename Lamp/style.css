@@ -1,17 +1,28 @@
 body{
+<<<<<<< HEAD
     background-color: #414040;
+=======
+    background-color: gray;
+>>>>>>> fb107ef2d9f03ebe84d7d6855adf2c50263c7a71
 }
 
 .lamp{
     position: relative;
     margin: 0 auto;
+<<<<<<< HEAD
     width: 1rem;
     height: 10rem;
     background-image:
+=======
+    width: 0.7rem;
+    height: 10rem;
+    background-image: 
+>>>>>>> fb107ef2d9f03ebe84d7d6855adf2c50263c7a71
         linear-gradient(#000000b3, #000000b3),
         linear-gradient(#000000b3, #000000b3),
         linear-gradient(#000000b3, #000000b3);
     background-repeat: no-repeat;
+<<<<<<< HEAD
     background-size:
         0.2rem 8rem,
         0.4rem 0.8rem,
@@ -21,19 +32,38 @@ body{
         50% 8rem,
         50% 8.8rem;
 } 
+=======
+    background-size: 
+        0.15rem 8rem,
+        0.4rem 0.8rem,
+        0.7rem 2rem;
+    background-position: 
+        50% 0,
+        0.14rem 8rem,
+        0 8.8rem;
+}
+>>>>>>> fb107ef2d9f03ebe84d7d6855adf2c50263c7a71
 
 .lamp:before,.lamp:after{
     content: "";
     position: absolute;
+<<<<<<< HEAD
 } 
 
 .lamp:before{
     left: -1.5rem;
+=======
+}
+
+.lamp:before{
+    left: -1.65rem;
+>>>>>>> fb107ef2d9f03ebe84d7d6855adf2c50263c7a71
     bottom: -4rem;
     width: 4rem;
     height: 4rem;
     border-radius: 50%;
     background: #ffffff08;
+<<<<<<< HEAD
     box-shadow: inset 0px 0px 10px #ffffff12;
     transition: all 0.75s;
 } 
@@ -62,10 +92,44 @@ body{
 } 
 
 .switch{
+=======
+    box-shadow: inset 2px -2px 10px #ffffff12;
+    transition: all 0.75s;
+}
+
+.light,.light:before{
+    position: absolute;
+}
+
+.light{
+    top: 10.05rem;
+    left: 0.3rem;
+    width: 0;
+    height: 1.5rem;
+    border-right: 0.2rem solid #ffffff0d;
+}
+
+.light:before{
+    content: "";
+    top: 1.5rem;
+    left: -0.55rem;
+    width: 0.9rem;
+    height: 0.9rem;
+    border-radius: 50%;
+    border: 0.2rem solid #ffffff0d;
+    box-shadow: 0px 0px 50px #ffffff00;
+}
+
+.switch{
+    appearance: none;
+    margin: 0 auto;
+    display: block;
+>>>>>>> fb107ef2d9f03ebe84d7d6855adf2c50263c7a71
     position: relative;
     width: 4rem;
     height: 4rem;
     border-radius: 50%;
+<<<<<<< HEAD
     display: block;
     margin: 0 auto;
     cursor: pointer;
@@ -78,6 +142,18 @@ input:checked~.lamp:before{
     background: #ffffff;
     box-shadow:
         0px 0px 10px #ffffffcc,
+=======
+    cursor: pointer;
+    top: 14rem;
+    z-index: 2;
+    outline: none;
+}
+
+input:checked~.lamp:before{
+    background: #ffffff;
+    box-shadow:
+        0px 2px 10px #ffffffcc,
+>>>>>>> fb107ef2d9f03ebe84d7d6855adf2c50263c7a71
         0px 5px 10px #ffffffcc,
         0px 8px 80px #ffffff99,
         0px 8px 120px #ffffff99;
