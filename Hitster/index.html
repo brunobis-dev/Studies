@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>MS.Song</title>
+  <meta name="theme-color" content="#120c26">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="MS.Song">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icons/icon-192.png">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- ============ TELA: JOGAR ============ -->
+  <main id="view-play" class="view active">
+    <!-- Tela inicial: título neon + alto-falante + botões (sem a barra de abas) -->
+    <section id="play-home" class="home">
+      <h1 class="neon-title" aria-label="MS.Song">
+        <span class="l1">MS.Song</span>
+      </h1>
+      <p class="neon-tag">O jogo da linha do tempo musical</p>
+
+      <div class="speaker" aria-hidden="true">
+        <span class="bolt b1"></span><span class="bolt b2"></span>
+        <span class="bolt b3"></span><span class="bolt b4"></span>
+        <span class="surround"></span>
+        <span class="cone"></span>
+        <span class="cap"></span>
+      </div>
+
+      <div class="home-actions">
+        <button id="btn-play-now" class="btn hero" type="button">Jogar agora</button>
+        <div class="home-row">
+          <button id="btn-rules" class="btn dark" type="button">Regras e mais</button>
+          <button class="btn dark square" data-goto="settings" type="button" aria-label="Configurações">
+            <svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="3.2"/>
+              <path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/>
+            </svg>
+          </button>
+        </div>
+        <button id="device-chip" class="chip home-chip" type="button">🔈 <span id="device-name">sem dispositivo</span></button>
+      </div>
+    </section>
+
+    <section id="play-playing" class="stage hidden">
+      <header class="top full">
+        <button id="btn-home" class="chip" type="button">‹ Início</button>
+        <span class="hint">MS.Song</span>
+      </header>
+      <div class="disc spinning" id="disc"><div class="hole"></div></div>
+      <p id="play-status" class="status">Tocando…</p>
+      <div class="controls">
+        <button class="btn round" id="btn-restart" title="Recomeçar">⏮</button>
+        <button class="btn round big-round" id="btn-toggle" title="Pausar">⏸</button>
+        <button class="btn round" id="btn-fwd" title="Avançar 15s">+15</button>
+      </div>
+      <button id="btn-next" class="btn primary big">📷 Próxima carta</button>
+    </section>
+  </main>
+
+  <!-- ============ TELA: CARTAS ============ -->
+  <main id="view-cards" class="view sub">
+    <header class="sub-top">
+      <button class="back-btn" data-goto="rules" type="button" aria-label="Voltar">
+        <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12H4M10 6l-6 6 6 6"/></svg>
+      </button>
+      <h1 class="sub-title">Cartas</h1>
+      <span class="chip sub-chip" id="deck-count">0 músicas</span>
+    </header>
+
+    <section class="card-box">
+      <h2>1. Adicionar músicas</h2>
+      <label class="lbl">Link de uma playlist sua no Spotify</label>
+      <div class="row">
+        <input id="in-playlist" type="url" placeholder="https://open.spotify.com/playlist/…">
+        <button class="btn" id="btn-import-pl">Importar</button>
+      </div>
+      <label class="lbl">…ou um CSV do Exportify</label>
+      <input id="in-csv" type="file" accept=".csv,text/csv">
+      <label class="lbl">…ou uma música avulsa (link da faixa)</label>
+      <div class="row">
+        <input id="in-track" type="url" placeholder="https://open.spotify.com/track/…">
+        <button class="btn" id="btn-add-track">Adicionar</button>
+      </div>
+      <p id="import-msg" class="msg"></p>
+    </section>
+
+    <section class="card-box">
+      <h2>2. Conferir os anos</h2>
+      <p class="hint">O Spotify costuma trazer o ano de remasterizações e coletâneas. As linhas com ⚠ merecem atenção.
+        O botão abaixo busca o ano de lançamento original no MusicBrainz (leva ~1 s por música).</p>
+      <div class="row wrap">
+        <button class="btn" id="btn-mb-flagged">🔎 Sugerir anos (só ⚠)</button>
+        <button class="btn" id="btn-mb-all">🔎 Sugerir anos (todas)</button>
+        <button class="btn ghost" id="btn-mb-stop" hidden>Parar</button>
+      </div>
+      <p id="mb-msg" class="msg"></p>
+      <div class="table-wrap">
+        <table id="deck-table">
+          <thead><tr><th>Ano</th><th>Música / Artista</th><th></th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <div class="row wrap">
+        <button class="btn ghost" id="btn-export">💾 Backup (.json)</button>
+        <label class="btn ghost file-btn">📂 Restaurar<input id="in-json" type="file" accept=".json,application/json"></label>
+        <button class="btn ghost danger" id="btn-clear">🗑 Limpar tudo</button>
+      </div>
+    </section>
+
+    <section class="card-box">
+      <h2>3. Imprimir</h2>
+      <label class="lbl">Tamanho da carta</label>
+      <select id="sel-size">
+        <option value="65">6,5 cm (igual ao original, 12 por folha)</option>
+        <option value="80">8 cm (6 por folha)</option>
+      </select>
+      <label class="lbl">Estilo do verso</label>
+      <select id="sel-style">
+        <option value="neon">Colorido</option>
+        <option value="bw">Preto e branco (economiza tinta)</option>
+      </select>
+      <label class="check"><input type="checkbox" id="chk-mirror" checked> Espelhar o verso (impressão frente e verso, virando pela borda longa)</label>
+      <button class="btn primary big" id="btn-print">🖨 Gerar folhas para imprimir</button>
+      <p class="hint">No diálogo de impressão: papel A4, escala 100% (sem “ajustar à página”) e margens “nenhuma”. Para salvar em PDF, escolha “Salvar como PDF”.</p>
+    </section>
+  </main>
+
+  <!-- ============ TELA: AJUSTES ============ -->
+  <main id="view-settings" class="view sub">
+    <header class="sub-top">
+      <button class="back-btn" data-goto="play" type="button" aria-label="Voltar">
+        <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12H4M10 6l-6 6 6 6"/></svg>
+      </button>
+      <h1 class="sub-title">Configurações</h1>
+    </header>
+
+    <h3 class="group-lbl">Serviço de streaming</h3>
+    <div class="group">
+      <button class="g-row" id="row-spotify" type="button" aria-expanded="false">
+        <svg class="spotify-logo" viewBox="0 0 24 24" width="40" height="40" aria-hidden="true">
+          <circle cx="12" cy="12" r="12" fill="#1ed760"/>
+          <path d="M6 9.2c4-1.2 8.6-.9 12.2 1.1M6.7 12.4c3.3-1 7-.7 9.9.9M7.4 15.4c2.6-.7 5.3-.5 7.6.7" fill="none" stroke="#000" stroke-width="1.7" stroke-linecap="round"/>
+        </svg>
+        <span class="g-main">Spotify</span>
+        <span class="g-side" id="spotify-status">Entrar</span>
+      </button>
+      <div class="g-panel" id="spotify-panel" hidden>
+      <label class="lbl">Client ID (do painel developer.spotify.com)</label>
+      <div class="row">
+        <input id="in-client" type="text" autocomplete="off" spellcheck="false" placeholder="ex.: 1a2b3c…">
+        <button class="btn" id="btn-save-client">Salvar</button>
+      </div>
+      <label class="lbl">Redirect URI — cadastre exatamente este endereço no painel:</label>
+      <div class="row">
+        <code id="redirect-uri" class="code"></code>
+        <button class="btn ghost" id="btn-copy-uri">Copiar</button>
+      </div>
+      <p id="acct" class="msg"></p>
+      <div class="row wrap">
+        <button class="btn primary" data-action="login" id="btn-login">Entrar com Spotify</button>
+        <button class="btn ghost" id="btn-logout">Sair</button>
+      </div>
+      </div>
+    </div>
+
+    <h3 class="group-lbl">Modo de jogo</h3>
+    <div class="group">
+      <label class="g-option">
+        <input type="radio" name="mode" value="full" class="sr-only">
+        <span class="g-opt-head">
+          <span>
+            <span class="g-main">Faixas completas</span>
+            <span class="g-desc">A música toca desde o início.</span>
+            <span class="g-strong">Usa a sua assinatura <span class="sp-green">Spotify</span>.</span>
+          </span>
+          <span class="tick" aria-hidden="true">✓</span>
+        </span>
+        <span class="wave" data-wave="full"></span>
+      </label>
+      <label class="g-option">
+        <input type="radio" name="mode" value="random" class="sr-only">
+        <span class="g-opt-head">
+          <span>
+            <span class="g-main">Trecho</span>
+            <span class="g-desc" id="excerpt-desc">Arraste a seleção para escolher de onde a música começa.</span>
+          </span>
+          <span class="tick" aria-hidden="true">✓</span>
+        </span>
+        <span class="wave" data-wave="random" id="excerpt-wave" role="slider" tabindex="0"
+              aria-label="Ponto de início do trecho" aria-valuemin="0" aria-valuemax="100"></span>
+        <span class="excerpt-chips">
+          <button type="button" data-pos="start">Início</button>
+          <button type="button" data-pos="middle">Meio</button>
+          <button type="button" data-pos="end">Fim</button>
+          <button type="button" data-pos="random">🎲 Aleatório</button>
+        </span>
+      </label>
+    </div>
+
+    <h3 class="group-lbl">Ao ler a carta</h3>
+    <div class="group">
+      <label class="g-row g-toggle">
+        <span>
+          <span class="g-main">Vibrar</span>
+          <span class="g-desc">O celular vibra quando o QR da carta é reconhecido.</span>
+        </span>
+        <input type="checkbox" id="chk-vibrate" class="switch" checked>
+      </label>
+    </div>
+
+
+    <p class="hint center foot">MS.Song · feito pelo Bruno</p>
+  </main>
+
+  <!-- ============ TELA: REGRAS E MAIS ============ -->
+  <main id="view-rules" class="view sub">
+    <header class="sub-top">
+      <button class="back-btn" data-goto="play" type="button" aria-label="Voltar">
+        <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12H4M10 6l-6 6 6 6"/></svg>
+      </button>
+      <h1 class="sub-title">Regras e mais</h1>
+    </header>
+
+    <div class="group">
+      <details class="g-details">
+        <summary class="g-row"><span class="g-main">Como jogar</span><span class="chev" aria-hidden="true"></span></summary>
+        <div class="g-body rules">
+          <p>Ouça sucessos dos últimos 100 anos e monte sua linha do tempo colocando cada música na ordem certa.
+            Quem juntar <b>10 cartas</b> primeiro leva o título de <b>MS.Song</b>!</p>
+
+          <h4>Como jogar</h4>
+          <p>Cada rodada tem três passos:</p>
+          <ol class="steps">
+            <li><b>Escanear</b> — quem é o DJ da vez toca em <b>Jogar agora</b> e escaneia uma carta. A música começa a tocar sem mostrar o nome.</li>
+            <li><b>Posicionar</b> — o jogador à esquerda do DJ coloca a carta, ainda virada, na sua linha do tempo: antes, depois ou entre as cartas que já tem.</li>
+            <li><b>Virar</b> — a carta é virada para conferir. Acertou? Ela fica na linha do tempo. Errou? Vai para o descarte.
+              Se o ano for igual ao de uma carta que já está lá, vale colocar antes ou depois dela.</li>
+          </ol>
+
+          <h4>Regras rápidas</h4>
+          <h5>Preparação</h5>
+          <ul>
+            <li>Decidam se vão jogar em equipes ou cada um por si.</li>
+            <li>Cada jogador (ou equipe) recebe uma carta inicial com o lado do ano para cima: ela começa a linha do tempo.</li>
+            <li>As fichas são opcionais. Para um jogo mais difícil, cada jogador ou equipe começa com <b>2 fichas</b> (use moedas, tampinhas ou o que tiver à mão).</li>
+            <li>Um jogador qualquer escaneia a carta do topo do monte e também pode jogar na rodada. Vocês podem manter sempre o mesmo DJ ou ir revezando.</li>
+            <li>Quem for o DJ não deve usar smartwatch: ele pode mostrar o nome da música.</li>
+          </ul>
+          <h5>Preparação da música</h5>
+          <ul>
+            <li>É preciso ter <b>Spotify Premium</b>. Abra o Spotify e dê play em qualquer coisa antes de começar.</li>
+            <li>Em Configurações › Modo de jogo, escolha <b>Faixas completas</b> (a música toca do início) ou <b>Ponto aleatório</b> (começa num trecho qualquer, mais difícil).</li>
+          </ul>
+          <h5>Vitória</h5>
+          <ul>
+            <li>Vence quem colocar <b>10 cartas</b> certas na sua linha do tempo primeiro.</li>
+          </ul>
+          <h5>Usando as fichas</h5>
+          <ul>
+            <li><b>Na sua vez:</b> gaste 1 ficha para pular a música e pegar outra carta.</li>
+            <li><b>Na vez de outro jogador:</b> achou que ele errou a posição? Grite <b>“MS.Song!”</b> e coloque sua ficha no lugar da linha do tempo dele onde você acha que a carta deveria ir. Se você estiver certo, a carta vai para a sua linha do tempo.</li>
+            <li><b>A qualquer momento:</b> troque 3 fichas por uma carta, colocada direto na sua linha do tempo sem precisar adivinhar. Não é preciso esperar a sua vez.</li>
+            <li><b>Ganhando fichas:</b> acerte o nome da música e do artista para ganhar 1 ficha, mesmo que a carta tenha sido colocada no lugar errado. Cada jogador pode ter no máximo <b>5 fichas</b>.</li>
+          </ul>
+          <h5>Regras das fichas</h5>
+          <ul>
+            <li>Para trocar 3 fichas por uma carta, a decisão tem que ser tomada antes de ouvir a música.</li>
+            <li>Se o desafio falhar porque a posição estava certa, quem jogou fica com a carta e todos que desafiaram perdem a ficha, mesmo que as duas cartas sejam do mesmo ano.</li>
+            <li>Quem gritar primeiro coloca a ficha primeiro. Quem desafiar depois pode escolher outro lugar, mas duas fichas não podem ficar no mesmo lugar.</li>
+          </ul>
+
+          <h4>Modos avançados</h4>
+          <p>Cada jogador pode escolher seu nível de dificuldade:</p>
+          <ul>
+            <li><b>Profissional:</b> valem as regras originais, mas para ganhar ou roubar uma carta é preciso dizer o artista e o nome da música. Cada um começa com 5 fichas e não ganha fichas novas.</li>
+            <li><b>Especialista:</b> é preciso dizer o artista, o nome da música e o ano exato. Cada um começa com 3 fichas e não ganha fichas novas.</li>
+            <li><b>Cooperativo:</b> todos jogam como uma só equipe, começando com 5 fichas e 1 carta na linha do tempo. Cada erro custa uma ficha. A equipe precisa juntar 10 cartas antes de ficar sem fichas.</li>
+            <li><b>Outros jeitos de jogar:</b> diminua o número de fichas para aumentar a tensão, ou aumente o número de cartas necessárias para vencer.</li>
+          </ul>
+        </div>
+      </details>
+    </div>
+
+    <h3 class="group-lbl">Baralho</h3>
+    <div class="group">
+      <button class="g-row" data-goto="cards" type="button">
+        <span>
+          <span class="g-main">Montar e imprimir cartas</span>
+          <span class="g-desc" id="rules-deck-count">0 músicas no baralho</span>
+        </span>
+        <span class="chev right" aria-hidden="true"></span>
+      </button>
+    </div>
+  </main>
+
+  <!-- ============ SCANNER ============ -->
+  <div id="scanner" class="overlay hidden">
+    <video id="video" playsinline muted></video>
+    <canvas id="scan-canvas" hidden></canvas>
+    <div class="frame"></div>
+    <p class="scan-hint" id="scan-hint">Procurando QR code…</p>
+    <button class="btn big" id="btn-scan-cancel">Cancelar</button>
+  </div>
+
+  <!-- ============ AVISO / MODAL ============ -->
+  <div id="modal" class="overlay dim hidden">
+    <div class="modal-box">
+      <p id="modal-text"></p>
+      <div class="row wrap center" id="modal-actions"></div>
+    </div>
+  </div>
+
+  <div id="toast" class="toast"></div>
+
+  <!-- ============ ÁREA DE IMPRESSÃO ============ -->
+  <div id="print-area"></div>
+
+
+  <script src="vendor/jsQR.js"></script>
+  <script src="vendor/qrcode.js"></script>
+  <script src="js/spotify.js"></script>
+  <script src="js/scanner.js"></script>
+  <script src="js/deck.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
